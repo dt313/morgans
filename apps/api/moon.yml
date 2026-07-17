@@ -1,11 +1,10 @@
 $schema: "https://moonrepo.dev/schemas/project.json"
 
-type: application
 language: python
 
 tasks:
   dev:
-    command: "uv run uvicorn app.v1:app --reload"
+    command: "uv run uvicorn src.main:app --reload"
 
   test:
     command: "uv run pytest"

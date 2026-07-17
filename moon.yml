@@ -1,0 +1,11 @@
+$schema: "https://moonrepo.dev/schemas/tasks.json"
+
+tasks:
+  dev:
+    deps:
+      - api:dev
+      - web:dev
+
+    options:
+      runInCI: false
+      persistent: true
