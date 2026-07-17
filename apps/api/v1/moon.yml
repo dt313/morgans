@@ -1,0 +1,17 @@
+$schema: "https://moonrepo.dev/schemas/project.json"
+
+type: application
+language: python
+
+tasks:
+  dev:
+    command: "uv run uvicorn app.v1:app --reload"
+
+  test:
+    command: "uv run pytest"
+
+  lint:
+    command: "uv run ruff check ."
+
+  format:
+    command: "uv run ruff format ."
