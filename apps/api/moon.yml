@@ -4,7 +4,36 @@ language: python
 
 tasks:
   dev:
-    command: "uv run uvicorn src.main:app --reload"
+    command: uv
+    args:
+      - run
+      - --env-file
+      - .env.dev
+      - "--"
+      - uvicorn
+      - src.main:app
+      - --reload
+
+  staging:
+    command: uv
+    args:
+      - run
+      - --env-file
+      - .env.staging
+      - "--"
+      - uvicorn
+      - src.main:app
+      - --reload
+
+  prod:
+    command: uv
+    args:
+      - run
+      - --env-file
+      - .env.prod
+      - "--"
+      - uvicorn
+      - src.main:app
 
   test:
     command: "uv run pytest"
