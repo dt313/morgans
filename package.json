@@ -1,0 +1,22 @@
+{
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.8",
+    "prettier": "^3.9.5",
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0"
+  },
+  "scripts": {
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "apps/web/**/*.{js,jsx,ts,tsx}": [
+      "pnpm --dir apps/web eslint --fix",
+      "pnpm --dir apps/web prettier --write"
+    ],
+    "apps/api/**/*.py": [
+      "uv run --directory apps/api ruff check --fix",
+      "uv run --directory apps/api ruff format"
+    ]
+  }
+}
