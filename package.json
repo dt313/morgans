@@ -11,8 +11,8 @@
   },
   "lint-staged": {
     "apps/web/**/*.{js,jsx,ts,tsx}": [
-      "pnpm --dir apps/web eslint --fix",
-      "pnpm --dir apps/web prettier --write"
+      "pnpm --dir apps/web exec eslint --fix",
+      "pnpm --dir apps/web exec prettier --write"
     ],
     "apps/api/**/*.py": [
       "uv run --directory apps/api ruff check --fix",
