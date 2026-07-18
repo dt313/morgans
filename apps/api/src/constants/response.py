@@ -9,6 +9,9 @@ class ResponseMessages(str, Enum):
     HEALTH_CHECK_SUCCESS = "Health check successful"
     HEALTH_CHECK_FAILED = "Health check failed"
 
+    # app
+    APP_INFO_RETRIEVED = "App info retrieved"
+
     # News
     NEWS_CREATED = "News created successfully"
     NEWS_UPDATED = "News updated successfully"
@@ -40,3 +43,10 @@ class ResponseCode(str, Enum):
 
     # Database
     DATABASE_ERROR = "database_error"
+
+    # Auth
+    UNAUTHORIZED = "unauthorized"
+    INVALID_ACCESS_TOKEN = "invalid_access_token"
+    EXPIRED_ACCESS_TOKEN = "expired_access_token"
+    INVALID_REFRESH_TOKEN = "invalid_refresh_token"
+    EXPIRED_REFRESH_TOKEN = "expired_refresh_token"

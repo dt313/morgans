@@ -1,8 +1,8 @@
 from typing import Optional
 from src.constants.response import ResponseCode
-import logging
+from src.core.logger import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class AppException(Exception):
@@ -39,5 +39,15 @@ class NotFoundException(AppException):
             message=message,
             status_code=404,
             code=ResponseCode.NOT_FOUND,
+            details=details,
+        )
+
+
+class UnauthorizedException(AppException):
+    def __init__(self, message="Unauthorized", details: Optional[str] = None):
+        super().__init__(
+            message=message,
+            status_code=401,
+            code=ResponseCode.UNAUTHORIZED,
             details=details,
         )

@@ -13,7 +13,10 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str
 
-    SECRET_KEY: str
+    ACCESS_SECRET_KEY: str
+    REFRESH_SECRET_KEY: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    REFRESH_TOKEN_EXPIRE_MINUTES: int = 10080
 
     LOG_LEVEL: str = "DEBUG"
 

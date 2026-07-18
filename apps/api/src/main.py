@@ -2,34 +2,37 @@ from fastapi import FastAPI
 from sqlalchemy.sql import text
 from fastapi.responses import JSONResponse
 from urllib.request import Request
+from src.core.logger import setup_logger, get_logger
 from src.core.exceptions import AppException
 from src.db.init import init_db
 from contextlib import asynccontextmanager
-from src.routes.route import api_router
+from src.routes import api_router
 from src.core.config import settings
 from src.db.session import engine
+
+setup_logger()
+logger = get_logger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print(f"{settings.APP_NAME} is starting up")
-    print(f"Database URL: {settings.DATABASE_URL}")
-
-    print(f"Settings: {settings}")
+    logger = get_logger(__name__)
+    logger.info(f"{settings.APP_NAME} is starting up")
+    logger.info(f"Database URL: {settings.DATABASE_URL}")
     try:
         async with engine.connect() as conn:
             await conn.execute(text("SELECT 1"))
-            print("Database connected")
+            logger.info("Database connected")
 
             await init_db()
-            print("Tables initialized")
+            logger.info("Tables initialized")
 
     except Exception as e:
-        print(f"Database failed: {e}")
+        logger.error(f"Database failed: {e}")
 
     yield
 
-    print(f"{settings.APP_NAME} is shutting down")
+    logger.info(f"{settings.APP_NAME} is shutting down")
     await engine.dispose()
 
 
@@ -45,6 +48,10 @@ async def app_exception_handler(
     request: Request,
     exc: AppException,
 ):
+
+    logger.error(
+        f"Handling AppException: {exc.message}, Code: {exc.code}, Status: {exc.status_code}"
+    )
     return JSONResponse(
         status_code=exc.status_code,
         content={
