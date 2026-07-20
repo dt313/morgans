@@ -32,8 +32,6 @@ class Article(Base):
 
     descriptions: Mapped[str | None] = mapped_column(String(700))
 
-    source: Mapped[str] = mapped_column(String(100))
-
     status: Mapped[ArticleStatus] = mapped_column(
         SQLEnum(ArticleStatus), default=ArticleStatus.DRAFT, nullable=False
     )
@@ -42,9 +40,12 @@ class Article(Base):
 
     author: Mapped[str | None] = mapped_column(String(100), nullable=True)
 
-    published_at: Mapped[datetime | None]
+    published_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
 
-    source = relationship("NewsSource", back_populates="articles")
+    news_source = relationship("NewsSource", back_populates="articles")
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

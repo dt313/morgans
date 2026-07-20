@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class RawRSSArticle(BaseModel):
@@ -15,3 +16,5 @@ class RawRSSArticle(BaseModel):
     category: str | None = None
 
     source_id: int
+
+    published_at: datetime | None = None

@@ -5,6 +5,9 @@ from src.models import NewsSource
 from src.schemas.crawl import RawRSSArticle
 from typing import List
 
+from email.utils import parsedate_to_datetime
+from datetime import timezone
+
 
 class RSSCollector(Collector):
     def __init__(self, source: NewsSource):
@@ -26,6 +29,7 @@ class RSSCollector(Collector):
                     category=self.source.category,
                     source_id=self.source.id,
                     thumbnail=self.extract_thumbnail(item),
+                    published_at=self.parse_rss_date(item.get("published")),
                 )
             )
 
@@ -40,3 +44,18 @@ class RSSCollector(Collector):
                 return link.get("href")
 
         return None
+
+    @staticmethod
+    def parse_rss_date(date_str: str | None):
+
+        if not date_str:
+            return None
+
+        try:
+            dt = parsedate_to_datetime(date_str)
+            if dt.tzinfo is not None:
+                dt = dt.astimezone(timezone.utc).replace(tzinfo=None)
+            return dt
+
+        except Exception:
+            return None

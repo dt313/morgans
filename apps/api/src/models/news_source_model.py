@@ -32,12 +32,10 @@ class NewsSource(Base):
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
-    last_crawled_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
-
     last_article_published_at: Mapped[datetime | None] = mapped_column(
         DateTime, nullable=True
     )
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
-    articles = relationship("Article", back_populates="source")
+    articles = relationship("Article", back_populates="news_source")
