@@ -30,6 +30,8 @@ class Article(Base):
 
     content: Mapped[str | None] = mapped_column(Text)
 
+    summary: Mapped[str | None] = mapped_column(Text)
+
     descriptions: Mapped[str | None] = mapped_column(String(700))
 
     status: Mapped[ArticleStatus] = mapped_column(

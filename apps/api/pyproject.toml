@@ -12,11 +12,13 @@ dependencies = [
     "fastapi>=0.139.2",
     "feedparser>=6.0.12",
     "greenlet>=3.5.3",
+    "httpx>=0.28.1",
     "pydantic-settings>=2.14.2",
     "python-dotenv>=1.2.2",
     "python-jose[cryptography]>=3.5.0",
     "rich>=15.0.0",
     "sqlalchemy>=2.0.51",
+    "trafilatura>=2.1.0",
     "uvicorn>=0.51.0",
 ]
 

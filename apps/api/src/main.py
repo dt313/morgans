@@ -22,6 +22,7 @@ async def lifespan(app: FastAPI):
     logger.info(f"Database URL: {settings.DATABASE_URL}")
 
     await crawl_service.rss_collect()
+
     try:
         async with engine.connect() as conn:
             await conn.execute(text("SELECT 1"))
