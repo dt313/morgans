@@ -6,8 +6,6 @@ from src.schemas.crawl import RawRSSArticle
 from src.repositories.article_repository import article_repo
 from datetime import datetime
 
-from src.crawlers.utils.article_parser import article_content_parser
-
 
 class CrawlService:
     async def rss_collect(self):
@@ -59,17 +57,15 @@ class CrawlService:
             data = []
 
             for article in new_articles:
-                content = article_content_parser.fetch(article.url)
-
-                print("Content : ", content)
-
+                # content = article_content_parser.fetch(article.url)
                 data.append(
                     {
                         "source_id": article.source_id,
                         "title": article.title,
                         "url": article.url,
-                        "descriptions": article.content,
-                        "content": content,
+                        "descriptions": article.descriptions,
+                        "content": article.content,
+                        "author": article.author,
                         "thumbnail_url": article.thumbnail,
                         "published_at": article.published_at,
                     }

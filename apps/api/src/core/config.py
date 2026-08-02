@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 10080
 
+    LLM_PROVIDER: str = "ollama"
+    LLM_MODEL: str = "gemma3:4b"
     LOG_LEVEL: str = "DEBUG"
 
     model_config = SettingsConfigDict(

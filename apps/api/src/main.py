@@ -10,6 +10,7 @@ from src.routes import api_router
 from src.core.config import settings
 from src.db.session import engine
 from src.services.crawl_service import crawl_service
+from src.services.article_service import article_service
 
 setup_logger()
 logger = get_logger(__name__)
@@ -22,6 +23,7 @@ async def lifespan(app: FastAPI):
     logger.info(f"Database URL: {settings.DATABASE_URL}")
 
     await crawl_service.rss_collect()
+    await article_service.update_summarize()
 
     try:
         async with engine.connect() as conn:

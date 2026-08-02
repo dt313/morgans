@@ -20,11 +20,20 @@ class RSSCollector(Collector):
         articles = []
 
         for item in feed.entries:
+            content = (
+                item.get("content", [{}])[0].get("value", "")
+                if item.get("content")
+                else ""
+            )
+
+            # print("Content ", content)
             articles.append(
                 RawRSSArticle(
                     title=item.get("title"),
                     url=item.get("link"),
-                    content=item.get("summary", ""),
+                    descriptions=item.get("summary", ""),
+                    content=content,
+                    author=item.get("author", ""),
                     publisher=self.source.publisher,
                     category=self.source.category,
                     source_id=self.source.id,

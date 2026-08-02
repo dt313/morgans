@@ -7,11 +7,15 @@ class RawRSSArticle(BaseModel):
 
     url: str
 
+    descriptions: str | None = None
+
     content: str | None = None
 
     thumbnail: str | None = None
 
     publisher: str
+
+    author: str | None = None
 
     category: str | None = None
 

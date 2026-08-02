@@ -1,5 +1,5 @@
 from enum import Enum
-
+from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy import String, Text, DateTime, func, Enum as SQLEnum, ForeignKey, Index
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -30,8 +30,11 @@ class Article(Base):
 
     content: Mapped[str | None] = mapped_column(Text)
 
-    summary: Mapped[str | None] = mapped_column(Text)
+    korean_summary: Mapped[str | None] = mapped_column(Text)
 
+    vietnamese_summary: Mapped[str | None] = mapped_column(Text)
+
+    topics: Mapped[list[str] | None] = mapped_column(ARRAY(String), nullable=True)
     descriptions: Mapped[str | None] = mapped_column(String(700))
 
     status: Mapped[ArticleStatus] = mapped_column(
