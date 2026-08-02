@@ -4,11 +4,17 @@ from src.repositories.article_repository import article_repo
 import asyncio
 from src.db.session import AsyncSessionLocal
 from src.models.article_model import ArticleStatus
+from sqlalchemy.ext.asyncio import AsyncSession
 
 REQUEST_NUMBER = 5
 
 
 class ArticleService:
+    async def get_published_articles(
+        self, db: AsyncSession, skip: int = 0, limit: int = 20
+    ):
+        return await article_repo.get_published_articles(db, skip=skip, limit=limit)
+
     async def update_summarize(self):
         async with AsyncSessionLocal() as db:
             articles = await article_repo.get_pending_articles(db=db)
