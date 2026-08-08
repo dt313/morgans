@@ -8,6 +8,7 @@ interface ApiResponse<T> {
 }
 interface ApiArticle {
   id: number;
+  url: string;
   title: string;
   descriptions: string | null;
   korean_summary: string | null;
@@ -25,6 +26,7 @@ function toFeedArticle(article: ApiArticle): Article {
   const date = article.published_at ? new Date(article.published_at) : null;
   return {
     id: String(article.id),
+    originalUrl: article.url,
     title: article.title,
     summary:
       article.korean_summary ??
@@ -42,6 +44,9 @@ function toFeedArticle(article: ApiArticle): Article {
           }).format(date)
         : "Recently",
     readTime: 3,
+    koreanSummary: article.korean_summary,
+    vietnameseSummary: article.vietnamese_summary,
+    topics: article.topics ?? [],
   };
 }
 
@@ -52,4 +57,13 @@ export async function getArticles(): Promise<Article[]> {
   if (!response.data.success)
     throw new Error(response.data.message || "Unable to load articles.");
   return response.data.data.map(toFeedArticle);
+}
+
+export async function getArticle(articleId: string): Promise<Article> {
+  const response = await api.get<ApiResponse<ApiArticle>>(
+    `/articles/${articleId}`,
+  );
+  if (!response.data.success)
+    throw new Error(response.data.message || "Unable to load article.");
+  return toFeedArticle(response.data.data);
 }

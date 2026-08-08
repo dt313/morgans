@@ -1,10 +1,13 @@
-from src.repositories.news_source_repository import news_source_repo
-from src.db.session import AsyncSessionLocal
-from src.crawlers.rss import RSSCollector
-from typing import List
-from src.schemas.crawl import RawRSSArticle
-from src.repositories.article_repository import article_repo
 from datetime import datetime
+
+from src.core.logger import get_logger
+from src.crawlers.rss import RSSCollector
+from src.db.session import AsyncSessionLocal
+from src.repositories.article_repository import article_repo
+from src.repositories.news_source_repository import news_source_repo
+from src.schemas.crawl import RawRSSArticle
+
+logger = get_logger(__name__)
 
 
 class CrawlService:
@@ -12,7 +15,7 @@ class CrawlService:
         async with AsyncSessionLocal() as db:
             sources = await news_source_repo.find_active_rss_sources(db=db)
 
-            fetched_articles: List[RawRSSArticle] = []
+            fetched_articles: list[RawRSSArticle] = []
             latest_published_at_by_source: dict[int, datetime] = {}
 
             for source in sources:
@@ -20,7 +23,7 @@ class CrawlService:
                 articles = await collector.fetch()
 
                 if not articles:
-                    print("No article ", source.category)
+                    logger.info("No article for %s", source.category)
                     continue
                 if source.last_article_published_at:
                     articles = [
@@ -39,7 +42,7 @@ class CrawlService:
 
                     latest_published_at_by_source[source.id] = max_published_at
 
-            print("Fetched Articles Length : ", len(fetched_articles))
+            logger.info("Fetched Articles Length: %s", len(fetched_articles))
 
             unique_articles = self.remove_duplicate_by_url(fetched_articles)
 
@@ -52,7 +55,7 @@ class CrawlService:
                 article for article in unique_articles if article.url not in exists_urls
             ]
 
-            print("Atfer duplicate remove", len(new_articles))
+            logger.info("After duplicate remove: %s", len(new_articles))
 
             data = []
 
@@ -81,7 +84,7 @@ class CrawlService:
                 )
 
     @staticmethod
-    def remove_duplicate_by_url(articles: List[RawRSSArticle]) -> List[RawRSSArticle]:
+    def remove_duplicate_by_url(articles: list[RawRSSArticle]) -> list[RawRSSArticle]:
         unique = {}
         for article in articles:
             if article.url not in unique:

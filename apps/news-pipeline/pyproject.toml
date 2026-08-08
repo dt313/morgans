@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "news-pipeline"
+version = "0.1.0"
+description = "News pipeline"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "alembic>=1.19.0",
+    "apscheduler>=3.11.3",
+    "asyncpg>=0.31.0",
+    "feedparser>=6.0.14",
+    "greenlet>=3.5.4",
+    "httpx>=0.28.1",
+    "pydantic-settings>=2.15.0",
+    "python-dotenv>=1.2.2",
+    "rich>=15.0.0",
+    "sqlalchemy>=2.0.51",
+    "trafilatura>=2.2.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.2",
+]

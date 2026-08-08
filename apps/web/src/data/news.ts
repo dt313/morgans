@@ -73,4 +73,10 @@ export const articles: Article[] = [
     thumbnail:
       "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=900&q=85",
   },
-];
+].map((article) => ({
+  ...article,
+  originalUrl: "#",
+  koreanSummary: null,
+  vietnameseSummary: null,
+  topics: [],
+}));

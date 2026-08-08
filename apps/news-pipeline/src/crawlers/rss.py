@@ -1,19 +1,18 @@
+from datetime import UTC
+from email.utils import parsedate_to_datetime
+
 import feedparser
 
 from src.crawlers.collector import Collector
 from src.models import NewsSource
 from src.schemas.crawl import RawRSSArticle
-from typing import List
-
-from email.utils import parsedate_to_datetime
-from datetime import timezone
 
 
 class RSSCollector(Collector):
     def __init__(self, source: NewsSource):
         self.source = source
 
-    async def fetch(self) -> List[RawRSSArticle]:
+    async def fetch(self) -> list[RawRSSArticle]:
 
         feed = feedparser.parse(self.source.rss_url)
 
@@ -26,7 +25,6 @@ class RSSCollector(Collector):
                 else ""
             )
 
-            # print("Content ", content)
             articles.append(
                 RawRSSArticle(
                     title=item.get("title"),
@@ -63,8 +61,8 @@ class RSSCollector(Collector):
         try:
             dt = parsedate_to_datetime(date_str)
             if dt.tzinfo is not None:
-                dt = dt.astimezone(timezone.utc).replace(tzinfo=None)
+                dt = dt.astimezone(UTC).replace(tzinfo=None)
             return dt
 
-        except Exception:
+        except Exception:  # noqa: BLE001
             return None

@@ -1,34 +1,10 @@
-from sqlalchemy import desc, select, update
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models.article_model import Article, ArticleStatus
 
 
 class ArticleRepository:
-    async def get_published_article(
-        self, db: AsyncSession, article_id: int
-    ) -> Article | None:
-        result = await db.execute(
-            select(Article).where(
-                Article.id == article_id,
-                Article.status == ArticleStatus.PUBLISHED,
-            )
-        )
-        return result.scalar_one_or_none()
-
-    async def get_published_articles(
-        self, db: AsyncSession, skip: int = 0, limit: int = 20
-    ) -> list[Article]:
-        result = await db.execute(
-            select(Article)
-            .where(Article.status == ArticleStatus.PUBLISHED)
-            .order_by(desc(Article.published_at).nulls_last(), desc(Article.id))
-            .offset(skip)
-            .limit(limit)
-        )
-
-        return list(result.scalars().all())
-
     async def find_existing_urls(self, db: AsyncSession, urls: list[str]) -> set[str]:
 
         result = await db.execute(select(Article.url).where(Article.url.in_(urls)))

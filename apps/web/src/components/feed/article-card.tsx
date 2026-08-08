@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Link from "next/link";
 import { BookmarkButton } from "@/components/ui/bookmark-button";
 import { ArticleMeta } from "@/components/feed/article-meta";
 import type { Article } from "@/types/news";
@@ -14,11 +14,7 @@ export function ArticleCard({
 }) {
   return (
     <article className="article-card">
-      <a
-        href="#"
-        className="article-card-link"
-        onClick={(event) => event.preventDefault()}
-      >
+      <Link href={`/articles/${article.id}`} className="article-card-link">
         <div className="article-copy">
           <p className="eyebrow">{article.category}</p>
           <h2>{article.title}</h2>
@@ -26,15 +22,10 @@ export function ArticleCard({
           <ArticleMeta article={article} />
         </div>
         <div className="article-image-wrap">
-          <Image
-            src={article.thumbnail}
-            alt=""
-            fill
-            sizes="(max-width: 600px) 105px, 180px"
-            className="article-image"
-          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={article.thumbnail} alt="" className="article-image" />
         </div>
-      </a>
+      </Link>
       <BookmarkButton active={bookmarked} onClick={onBookmark} />
     </article>
   );

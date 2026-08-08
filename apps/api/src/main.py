@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.sql import text
 from fastapi.responses import JSONResponse
 from urllib.request import Request
@@ -9,8 +10,6 @@ from contextlib import asynccontextmanager
 from src.routes import api_router
 from src.core.config import settings
 from src.db.session import engine
-from src.services.crawl_service import crawl_service
-from src.services.article_service import article_service
 
 setup_logger()
 logger = get_logger(__name__)
@@ -21,9 +20,6 @@ async def lifespan(app: FastAPI):
     logger = get_logger(__name__)
     logger.info(f"{settings.APP_NAME} is starting up")
     logger.info(f"Database URL: {settings.DATABASE_URL}")
-
-    await crawl_service.rss_collect()
-    await article_service.update_summarize()
 
     try:
         async with engine.connect() as conn:
@@ -46,6 +42,14 @@ app = FastAPI(
     title="News AI API",
     version="0.1.0",
     lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 

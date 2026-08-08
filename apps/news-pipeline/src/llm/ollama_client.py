@@ -1,6 +1,9 @@
 import httpx
 
+from src.core.logger import get_logger
 from src.llm.base import LLMClient
+
+logger = get_logger(__name__)
 
 
 class OllamaClient(LLMClient):
@@ -14,9 +17,7 @@ class OllamaClient(LLMClient):
     async def generate(self, prompt: str) -> str:
 
         async with httpx.AsyncClient(timeout=httpx.Timeout(120.0)) as client:
-            print("================ Model ================")
-            print(self.model)
-            print("===========================================")
+            logger.debug("Ollama model: %s", self.model)
 
             response = await client.post(
                 self.url,

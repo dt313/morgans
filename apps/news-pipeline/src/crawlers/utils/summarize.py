@@ -1,6 +1,10 @@
-from src.llm.factory import get_llm
 import json
 from typing import TypedDict
+
+from src.core.logger import get_logger
+from src.llm.factory import get_llm
+
+logger = get_logger(__name__)
 
 
 class SummarizeRequest(TypedDict):
@@ -63,9 +67,7 @@ class LLMSummarize:
             """
 
         result = await self.llm.generate(prompt)
-        print("================ RAW RESULT ================")
-        print(repr(result))
-        print("===========================================")
+        logger.debug("RAW RESULT: %s", repr(result))
         return json.loads(result)
 
 

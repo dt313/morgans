@@ -7,6 +7,10 @@ export interface Article {
   publisher: string;
   publishedAt: string;
   readTime: number;
+  originalUrl: string;
+  koreanSummary: string | null;
+  vietnameseSummary: string | null;
+  topics: string[];
 }
 
 export interface Category {
