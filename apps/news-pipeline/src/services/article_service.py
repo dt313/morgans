@@ -28,13 +28,33 @@ class ArticleService:
                     try:
                         logger.info("Processing article %s", article.id)
 
-                        result = await llm_summarize.summarize(content=article.content)
+                        result = await llm_summarize.summarize(
+                            title=article.korean_title, content=article.content
+                        )
+
+                        vietnamese_title = result.get("vietnamese_title")
+                        korean_summary = result.get("korean_summary")
+                        vietnamese_summary = result.get("vietnamese_summary")
+
+                        if not korean_summary or not vietnamese_summary:
+                            logger.warning(
+                                "Article %s skipped: no summary generated (%s)",
+                                article.id,
+                                result,
+                            )
+                            await article_repo.update_summary(
+                                db=db,
+                                article_id=article.id,
+                                status=ArticleStatus.FAILED,
+                            )
+                            return
 
                         await article_repo.update_summary(
                             db=db,
                             article_id=article.id,
-                            korean_summary=result["korean_summary"],
-                            vietnamese_summary=result["vietnamese_summary"],
+                            vietnamese_title=vietnamese_title,
+                            korean_summary=korean_summary,
+                            vietnamese_summary=vietnamese_summary,
                             topics=result.get("topics", []),
                             status=ArticleStatus.PUBLISHED,
                         )

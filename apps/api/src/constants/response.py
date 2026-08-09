@@ -40,6 +40,7 @@ class ResponseCode(str, Enum):
     # News
     NEWS_CREATED = "news_created"
     NEWS_NOT_FOUND = "news_not_found"
+    NOT_FOUND = "not_found"
 
     # Database
     DATABASE_ERROR = "database_error"

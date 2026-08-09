@@ -1,5 +1,5 @@
-import { NewsFeedLayout } from "@/components/layout/news-feed-layout";
+import { LandingPage } from "@/components/landing/landing-page";
 
 export default function Home() {
-  return <NewsFeedLayout />;
+  return <LandingPage />;
 }

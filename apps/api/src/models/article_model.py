@@ -24,7 +24,11 @@ class Article(Base):
 
     source_id: Mapped[int] = mapped_column(ForeignKey("news_sources.id"))
 
-    title: Mapped[str] = mapped_column(String(500))
+    korean_title: Mapped[str] = mapped_column(String(500), nullable=False, default="")
+
+    vietnamese_title: Mapped[str] = mapped_column(
+        String(500), nullable=True, default=""
+    )
 
     url: Mapped[str] = mapped_column(unique=True)
 
@@ -51,6 +55,14 @@ class Article(Base):
     )
 
     news_source = relationship("NewsSource", back_populates="articles")
+
+    @property
+    def category(self) -> str | None:
+        return self.news_source.category if self.news_source else None
+
+    @property
+    def publisher(self) -> str | None:
+        return self.news_source.publisher if self.news_source else None
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

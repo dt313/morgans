@@ -22,6 +22,14 @@ class Settings(BaseSettings):
     LLM_MODEL: str = "gemma3:4b"
     LOG_LEVEL: str = "DEBUG"
 
+    ELEVENLABS_API_KEY: str = ""
+    ELEVENLABS_MODEL_ID: str = "eleven_v3"
+    KOREAN_VOICE_ID: str = "JBFqnCBsd6RMkjVDRZzb"
+    VIETNAMESE_VOICE_ID: str = "5vqV9IG7sDpzgzKOIZAv"
+    ELEVENLABS_FALLBACK_VOICE_ID: str = "JBFqnCBsd6RMkjVDRZzb"
+    ELEVENLABS_OUTPUT_FORMAT: str = "mp3_44100_128"
+    AUDIO_CACHE_DIR: str = "static/audio"
+
     model_config = SettingsConfigDict(
         env_file=f".env.{APP_ENV}",
         env_file_encoding="utf-8",

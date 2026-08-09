@@ -24,7 +24,11 @@ class Article(Base):
 
     source_id: Mapped[int] = mapped_column(ForeignKey("news_sources.id"))
 
-    title: Mapped[str] = mapped_column(String(500))
+    korean_title: Mapped[str] = mapped_column(
+        String(500), nullable=False, default="")
+
+    vietnamese_title: Mapped[str] = mapped_column(
+        String(500), nullable=True, default="")
 
     url: Mapped[str] = mapped_column(unique=True)
 
@@ -34,7 +38,8 @@ class Article(Base):
 
     vietnamese_summary: Mapped[str | None] = mapped_column(Text)
 
-    topics: Mapped[list[str] | None] = mapped_column(ARRAY(String), nullable=True)
+    topics: Mapped[list[str] | None] = mapped_column(
+        ARRAY(String), nullable=True)
     descriptions: Mapped[str | None] = mapped_column(String(700))
 
     status: Mapped[ArticleStatus] = mapped_column(

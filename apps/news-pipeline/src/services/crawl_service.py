@@ -36,11 +36,15 @@ class CrawlService:
                     ]
                 if articles:
                     fetched_articles.extend(articles)
-                    max_published_at = max(
-                        a.published_at for a in articles if a.published_at
-                    )
+                    published_dates = [
+                        article.published_at
+                        for article in articles
+                        if article.published_at is not None
+                    ]
 
-                    latest_published_at_by_source[source.id] = max_published_at
+                    if published_dates:
+                        latest_published_at_by_source[source.id] = max(
+                            published_dates)
 
             logger.info("Fetched Articles Length: %s", len(fetched_articles))
 
@@ -64,7 +68,7 @@ class CrawlService:
                 data.append(
                     {
                         "source_id": article.source_id,
-                        "title": article.title,
+                        "korean_title": article.title,
                         "url": article.url,
                         "descriptions": article.descriptions,
                         "content": article.content,

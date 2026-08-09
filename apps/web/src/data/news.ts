@@ -76,6 +76,8 @@ export const articles: Article[] = [
 ].map((article) => ({
   ...article,
   originalUrl: "#",
+  koreanTitle: null,
+  vietnameseTitle: null,
   koreanSummary: null,
   vietnameseSummary: null,
   topics: [],

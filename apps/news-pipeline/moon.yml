@@ -1,0 +1,34 @@
+$schema: "https://moonrepo.dev/schemas/project.json"
+
+language: python
+
+tasks:
+  dev:
+    command: uv
+    args:
+      - run
+      - --env-file
+      - .env.dev
+      - "--"
+      - python
+      - src/main.py
+      - --once
+
+  schedule:
+    command: uv
+    args:
+      - run
+      - --env-file
+      - .env.dev
+      - "--"
+      - python
+      - src/main.py
+
+  test:
+    command: "uv run pytest"
+
+  lint:
+    command: "uv run ruff check ."
+
+  format:
+    command: "uv run ruff format ."

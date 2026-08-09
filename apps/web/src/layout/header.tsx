@@ -1,6 +1,11 @@
+"use client";
+
 import { Icon } from "@/components/ui/icon";
+import { useLanguage } from "@/hooks/use-language";
 
 export function Header() {
+  const { language, setLanguage } = useLanguage();
+
   return (
     <header className="site-header">
       <div className="header-inner">
@@ -20,6 +25,19 @@ export function Header() {
           />
         </label>
         <nav className="header-actions" aria-label="Account actions">
+          <label className="language-select">
+            <Icon name="globe" size={16} />
+            <select
+              value={language}
+              onChange={(event) =>
+                setLanguage(event.target.value as "ko" | "vi")
+              }
+              aria-label="Language"
+            >
+              <option value="ko">한국어</option>
+              <option value="vi">Tiếng Việt</option>
+            </select>
+          </label>
           <button aria-label="Notifications">
             <Icon name="bell" />
           </button>

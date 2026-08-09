@@ -8,9 +8,12 @@ from src.models.article_model import ArticleStatus
 class ArticleResponse(BaseModel):
     id: int
     source_id: int
-    title: str
+    korean_title: str | None
+    vietnamese_title: str | None
     url: str
     descriptions: str | None
+    category: str | None
+    publisher: str | None
     korean_summary: str | None
     vietnamese_summary: str | None
     topics: list[str] | None

@@ -12,5 +12,18 @@ class ArticleService:
     ):
         return await article_repo.get_published_articles(db, skip=skip, limit=limit)
 
+    async def get_categories(self, db: AsyncSession):
+        return await article_repo.get_categories(db)
+
+    async def get_published_articles_by_category(
+        self, db: AsyncSession, category: str, skip: int = 0, limit: int = 20
+    ):
+        return await article_repo.get_published_articles_by_category(
+            db, category=category, skip=skip, limit=limit
+        )
+
+    async def get_related_articles(self, db: AsyncSession, article, limit: int = 6):
+        return await article_repo.get_related_articles(db, article=article, limit=limit)
+
 
 article_service = ArticleService()

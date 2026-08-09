@@ -19,4 +19,7 @@ __pycache__/
 # Virtual environments
 .venv/
 
+# Generated audio cache
+apps/api/static/audio/
+
 .vscode/*

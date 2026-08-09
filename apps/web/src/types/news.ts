@@ -8,6 +8,8 @@ export interface Article {
   publishedAt: string;
   readTime: number;
   originalUrl: string;
+  koreanTitle: string | null;
+  vietnameseTitle: string | null;
   koreanSummary: string | null;
   vietnameseSummary: string | null;
   topics: string[];

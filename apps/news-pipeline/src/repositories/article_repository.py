@@ -34,6 +34,7 @@ class ArticleRepository:
         self,
         db: AsyncSession,
         article_id: int,
+        vietnamese_title: str | None = None,
         korean_summary: str | None = None,
         vietnamese_summary: str | None = None,
         topics: str | None = None,
@@ -43,6 +44,7 @@ class ArticleRepository:
             update(Article)
             .where(Article.id == article_id)
             .values(
+                vietnamese_title=vietnamese_title,
                 korean_summary=korean_summary,
                 vietnamese_summary=vietnamese_summary,
                 topics=topics,
