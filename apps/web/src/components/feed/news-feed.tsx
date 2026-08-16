@@ -5,10 +5,14 @@ export function NewsFeed({
   articles,
   bookmarkedIds,
   onBookmark,
+  activeAudioId,
+  onAudioActivate,
 }: {
   articles: Article[];
   bookmarkedIds: string[];
   onBookmark: (id: string) => void;
+  activeAudioId: string | null;
+  onAudioActivate: (articleId: string) => void;
 }) {
   return (
     <div className="article-list">
@@ -18,6 +22,8 @@ export function NewsFeed({
           article={article}
           bookmarked={bookmarkedIds.includes(article.id)}
           onBookmark={() => onBookmark(article.id)}
+          activeAudioId={activeAudioId}
+          onAudioActivate={onAudioActivate}
         />
       ))}
     </div>

@@ -94,27 +94,3 @@ export async function getCategories(): Promise<Category[]> {
   }));
   return [all, ...rest];
 }
-
-export async function getArticle(articleId: string): Promise<Article> {
-  const response = await api.get<ApiResponse<ApiArticle>>(
-    `/articles/${articleId}`,
-  );
-  if (!response.data.success)
-    throw new Error(response.data.message || "Unable to load article.");
-  return toFeedArticle(response.data.data);
-}
-
-export async function getRelatedArticles(
-  articleId: string,
-  limit = 6,
-): Promise<Article[]> {
-  const response = await api.get<ApiResponse<ApiArticle[]>>(
-    `/articles/${articleId}/related`,
-    { params: { limit } },
-  );
-  if (!response.data.success)
-    throw new Error(
-      response.data.message || "Unable to load related articles.",
-    );
-  return response.data.data.map(toFeedArticle);
-}

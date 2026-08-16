@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { categories as fallbackCategories } from "@/data/news";
 import { CategoryTabs } from "@/components/feed/category-tabs";
-import { FeaturedArticle } from "@/components/feed/featured-article";
 import { NewsFeed } from "@/components/feed/news-feed";
 import { ErrorState } from "@/components/feed/error-state";
 import { LoadingSkeleton } from "@/components/feed/loading-skeleton";
@@ -30,6 +29,7 @@ export function NewsFeedLayout() {
   const [loadedCategory, setLoadedCategory] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [retryKey, setRetryKey] = useState(0);
+  const [activeAudioId, setActiveAudioId] = useState<string | null>(null);
   const { bookmarks, toggleBookmark } = useBookmarks();
 
   const categoryId = searchParams.get("category") ?? "all";
@@ -102,15 +102,6 @@ export function NewsFeedLayout() {
     setRetryKey((key) => key + 1);
   };
 
-  const topStories = useMemo(
-    () => (isAll ? articles.slice(0, 3) : []),
-    [articles, isAll],
-  );
-  const feed = useMemo(
-    () => (isAll ? articles.slice(3) : articles),
-    [articles, isAll],
-  );
-
   return (
     <main className="news-page">
       <Header />
@@ -127,29 +118,12 @@ export function NewsFeedLayout() {
             <ErrorState message={error} onRetry={handleRetry} />
           ) : articles.length > 0 ? (
             <>
-              {isAll && topStories.length > 0 && (
-                <>
-                  <p className="section-kicker">Top story</p>
-                  <div className="top-stories">
-                    {topStories.map((article) => (
-                      <FeaturedArticle
-                        key={article.id}
-                        article={article}
-                        bookmarked={bookmarks.includes(article.id)}
-                        onBookmark={() => toggleBookmark(article.id)}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-              <div className="feed-heading">
-                <h2>Latest news</h2>
-                <span>{isAll ? "Curated for you" : category}</span>
-              </div>
               <NewsFeed
-                articles={feed}
+                articles={articles}
                 bookmarkedIds={bookmarks}
                 onBookmark={toggleBookmark}
+                activeAudioId={activeAudioId}
+                onAudioActivate={setActiveAudioId}
               />
             </>
           ) : (
