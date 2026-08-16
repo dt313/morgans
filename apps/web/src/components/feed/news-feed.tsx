@@ -7,12 +7,14 @@ export function NewsFeed({
   onBookmark,
   activeAudioId,
   onAudioActivate,
+  showCategory,
 }: {
   articles: Article[];
   bookmarkedIds: string[];
   onBookmark: (id: string) => void;
   activeAudioId: string | null;
   onAudioActivate: (articleId: string) => void;
+  showCategory: boolean;
 }) {
   return (
     <div className="article-list">
@@ -24,6 +26,7 @@ export function NewsFeed({
           onBookmark={() => onBookmark(article.id)}
           activeAudioId={activeAudioId}
           onAudioActivate={onAudioActivate}
+          showCategory={showCategory}
         />
       ))}
     </div>

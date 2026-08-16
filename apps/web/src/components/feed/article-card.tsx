@@ -10,12 +10,14 @@ export function ArticleCard({
   onBookmark,
   activeAudioId,
   onAudioActivate,
+  showCategory,
 }: {
   article: Article;
   bookmarked: boolean;
   onBookmark: () => void;
   activeAudioId: string | null;
   onAudioActivate: (articleId: string) => void;
+  showCategory: boolean;
 }) {
   const { language } = useLanguage();
   const title =
@@ -30,7 +32,7 @@ export function ArticleCard({
   return (
     <article className="article-card">
       <div className="article-copy">
-        <p className="eyebrow">{article.category}</p>
+        {showCategory && <p className="eyebrow">{article.category}</p>}
         <h2>{title}</h2>
         <ArticleMeta article={article} />
         <p className="article-summary">{summary}</p>

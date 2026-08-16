@@ -37,6 +37,8 @@ export function NewsFeedLayout() {
   const isAll = category === "All";
   const isLoading = loadedCategory !== category;
 
+  console.log({ categoryId, category, isAll });
+
   const handleSelectCategory = (name: string) => {
     const id = name.toLowerCase();
     router.replace(id === "all" ? "/feed" : `/feed?category=${id}`, {
@@ -124,6 +126,7 @@ export function NewsFeedLayout() {
                 onBookmark={toggleBookmark}
                 activeAudioId={activeAudioId}
                 onAudioActivate={setActiveAudioId}
+                showCategory={isAll}
               />
             </>
           ) : (
