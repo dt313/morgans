@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import FileResponse
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.exceptions import NotFoundException
@@ -13,11 +14,28 @@ from src.services.tts_service import tts_service
 router = APIRouter(prefix="/articles", tags=["Articles"])
 
 
+class TrendingTopic(BaseModel):
+    topic: str
+    count: int
+
+
 @router.get("/categories", response_model=SuccessResponseModel[list[str]])
 async def get_categories(db: AsyncSession = Depends(get_db)):
     categories = await article_service.get_categories(db=db)
     return SuccessResponseModel(
         message="Categories retrieved successfully", data=categories
+    )
+
+
+@router.get("/trending", response_model=SuccessResponseModel[list[TrendingTopic]])
+async def get_trending_topics(
+    db: AsyncSession = Depends(get_db),
+    limit: int = Query(default=10, ge=1, le=50),
+):
+    topics = await article_service.get_trending_topics(db=db, limit=limit)
+    data = [TrendingTopic(topic=t, count=c) for t, c in topics]
+    return SuccessResponseModel(
+        message="Trending topics retrieved successfully", data=data
     )
 
 
@@ -39,6 +57,19 @@ async def get_articles(
     return SuccessResponseModel(
         message="Articles retrieved successfully", data=articles
     )
+
+
+@router.get("/search", response_model=SuccessResponseModel[list[ArticleResponse]])
+async def search_articles(
+    q: str = Query(..., min_length=1),
+    db: AsyncSession = Depends(get_db),
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=20, ge=1, le=100),
+):
+    articles = await article_service.search_articles(
+        db=db, query=q, skip=skip, limit=limit
+    )
+    return SuccessResponseModel(message="Articles searched successfully", data=articles)
 
 
 @router.get("/{article_id}", response_model=SuccessResponseModel[ArticleResponse])

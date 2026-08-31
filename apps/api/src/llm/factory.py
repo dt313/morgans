@@ -8,6 +8,8 @@ def get_llm():
     if settings.LLM_PROVIDER == "ollama":
         return OllamaClient(model=settings.LLM_MODEL)
     elif settings.LLM_PROVIDER == "deepseek":
-        return DeepSeekClient(model=settings.LLM_MODEL, api_key=settings.DEEPSEEK_API_KEY)
+        return DeepSeekClient(
+            model=settings.LLM_MODEL, api_key=settings.DEEPSEEK_API_KEY
+        )
 
     raise ValueError("Unsupported LLM provider")

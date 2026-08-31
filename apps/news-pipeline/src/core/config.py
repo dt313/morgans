@@ -21,6 +21,11 @@ class Settings(BaseSettings):
     PIPELINE_RUN_ON_START: bool = True
     PIPELINE_INTERVAL_MINUTES: int = 30
 
+    OLLAMA_BASE_URL: str = "http://localhost:11434"
+    DEEPSEEK_API_KEY: str = 'api_key_here'
+
+    EMBEDDING_MODEL: str = "bgpt:3b"
+
     model_config = SettingsConfigDict(
         env_file=f".env.{APP_ENV}",
         env_file_encoding="utf-8",

@@ -30,6 +30,21 @@ class ArticleRepository:
 
         return list(result.scalars().all())
 
+    async def get_pending_embeddings(self, db: AsyncSession):
+        result = await db.execute(
+            select(Article)
+            .where(
+                Article.korean_summary.is_not(None),
+                Article.topics.is_not(None),
+                Article.korean_title.is_not(None),
+                Article.embedding.is_(None),
+                Article.status == ArticleStatus.PROCESSING,
+            )
+            .order_by(Article.published_at)
+        )
+
+        return list(result.scalars().all())
+
     async def update_summary(
         self,
         db: AsyncSession,
@@ -37,7 +52,7 @@ class ArticleRepository:
         vietnamese_title: str | None = None,
         korean_summary: str | None = None,
         vietnamese_summary: str | None = None,
-        topics: str | None = None,
+        topics: list[str] | None = None,
         status: ArticleStatus = ArticleStatus.PUBLISHED,
     ):
         await db.execute(
@@ -50,6 +65,20 @@ class ArticleRepository:
                 topics=topics,
                 status=status,
             )
+        )
+
+        await db.commit()
+
+    async def update_embedding(
+        self,
+        db: AsyncSession,
+        article_id: int,
+        embedding: list[float],
+    ):
+        await db.execute(
+            update(Article)
+            .where(Article.id == article_id)
+            .values(embedding=embedding, status=ArticleStatus.PUBLISHED)
         )
 
         await db.commit()

@@ -8,6 +8,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db.base import Base
 
+from pgvector.sqlalchemy import Vector
+
 
 class ArticleStatus(str, Enum):
     DRAFT = "draft"
@@ -56,6 +58,11 @@ class Article(Base):
     )
 
     news_source = relationship("NewsSource", back_populates="articles")
+
+    embedding: Mapped[list[float] | None] = mapped_column(
+        Vector(1024),
+        nullable=True,
+    )
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

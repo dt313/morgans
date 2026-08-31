@@ -30,6 +30,10 @@ class Settings(BaseSettings):
     ELEVENLABS_OUTPUT_FORMAT: str = "mp3_44100_128"
     AUDIO_CACHE_DIR: str = "static/audio"
 
+    OLLAMA_BASE_URL: str = "http://localhost:11434"
+    EMBEDDING_MODEL: str = "bgpt:3b"
+
+    DEEPSEEK_API_KEY: str = "api_key_here"
     model_config = SettingsConfigDict(
         env_file=f".env.{APP_ENV}",
         env_file_encoding="utf-8",

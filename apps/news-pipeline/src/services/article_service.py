@@ -1,7 +1,7 @@
 import asyncio
 
 from src.core.logger import get_logger
-from src.crawlers.utils.summarize import llm_summarize
+from src.core.summarize import llm_summarize
 from src.db.session import AsyncSessionLocal
 from src.models.article_model import ArticleStatus
 from src.repositories.article_repository import article_repo
@@ -56,7 +56,7 @@ class ArticleService:
                             korean_summary=korean_summary,
                             vietnamese_summary=vietnamese_summary,
                             topics=result.get("topics", []),
-                            status=ArticleStatus.PUBLISHED,
+                            status=ArticleStatus.PROCESSING,
                         )
 
                         logger.info("Completed article %s", article.id)

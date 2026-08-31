@@ -63,24 +63,61 @@ function toFeedArticle(article: ApiArticle): Article {
   };
 }
 
-export async function getArticles(): Promise<Article[]> {
-  const response = await api.get<ApiResponse<ApiArticle[]>>("/articles", {
-    params: { skip: 0, limit: 50 },
-  });
-  if (!response.data.success)
-    throw new Error(response.data.message || "Unable to load articles.");
-  return response.data.data.map(toFeedArticle);
+const PAGE_SIZE = 20;
+
+export interface ArticlePage {
+  articles: Article[];
+  hasMore: boolean;
 }
 
-export async function getArticlesByCategory(
+export function getArticles({
+  skip = 0,
+  limit = PAGE_SIZE,
+}: {
+  skip?: number;
+  limit?: number;
+} = {}): Promise<ArticlePage> {
+  return fetchArticles("/articles", { skip, limit });
+}
+
+export function getArticlesByCategory(
   category: string,
-): Promise<Article[]> {
-  const response = await api.get<ApiResponse<ApiArticle[]>>("/articles", {
-    params: { category, skip: 0, limit: 50 },
-  });
+  {
+    skip = 0,
+    limit = PAGE_SIZE,
+  }: {
+    skip?: number;
+    limit?: number;
+  } = {},
+): Promise<ArticlePage> {
+  return fetchArticles("/articles", { skip, limit, category });
+}
+
+export function searchArticles(
+  query: string,
+  {
+    skip = 0,
+    limit = PAGE_SIZE,
+  }: {
+    skip?: number;
+    limit?: number;
+  } = {},
+): Promise<ArticlePage> {
+  return fetchArticles("/articles/search", { skip, limit, q: query });
+}
+
+async function fetchArticles(
+  url: string,
+  params: Record<string, string | number>,
+): Promise<ArticlePage> {
+  const response = await api.get<ApiResponse<ApiArticle[]>>(url, { params });
   if (!response.data.success)
     throw new Error(response.data.message || "Unable to load articles.");
-  return response.data.data.map(toFeedArticle);
+  const fetched = response.data.data.map(toFeedArticle);
+  return {
+    articles: fetched,
+    hasMore: fetched.length >= (params.limit as number),
+  };
 }
 
 export async function getCategories(): Promise<Category[]> {
@@ -93,4 +130,19 @@ export async function getCategories(): Promise<Category[]> {
     name: capitalize(name),
   }));
   return [all, ...rest];
+}
+
+export interface TrendingTopic {
+  topic: string;
+  count: number;
+}
+
+export async function getTrendingTopics(limit = 10): Promise<TrendingTopic[]> {
+  const response = await api.get<ApiResponse<TrendingTopic[]>>(
+    "/articles/trending",
+    { params: { limit } },
+  );
+  if (!response.data.success)
+    throw new Error(response.data.message || "Unable to load trending topics.");
+  return response.data.data;
 }

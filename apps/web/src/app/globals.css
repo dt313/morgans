@@ -457,13 +457,25 @@ button {
   font-family: Georgia, serif;
   font-size: 13px;
 }
+.search-results-heading {
+  margin-bottom: 26px;
+}
+.search-results-heading h1 {
+  margin: 0;
+  font-family: Georgia, serif;
+  font-size: 26px;
+}
+.search-results-heading p {
+  margin: 6px 0 0;
+  color: #6b6b6b;
+  font-size: 14px;
+}
 .empty-state {
   display: grid;
   min-height: 460px;
   place-content: center;
   text-align: center;
-}
-.empty-state span {
+}.empty-state span {
   color: #1a8917;
   font-size: 46px;
 }
@@ -1260,10 +1272,25 @@ button {
   font-family: Georgia, serif;
   font-size: 17px;
 }
-.landing-footer {
-  border-top: 1px solid #ececec;
-  padding: 26px 0;
+.feed-end {
+  margin: 0;
+  padding: 34px 0 48px;
+  color: #9a9a9a;
+  font-family: Georgia, serif;
+  font-size: 14px;
+  text-align: center;
 }
+.load-more-indicator {
+  padding: 4px 0 8px;
+}
+.load-more-hint {
+  display: block;
+  color: #9a9a9a;
+  font-size: 12px;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
 .landing-footer .landing-container {
   display: flex;
   align-items: center;

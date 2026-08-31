@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { categories as fallbackCategories } from "@/data/news";
 import { CategoryTabs } from "@/components/feed/category-tabs";
 import { NewsFeed } from "@/components/feed/news-feed";
 import { ErrorState } from "@/components/feed/error-state";
 import { LoadingSkeleton } from "@/components/feed/loading-skeleton";
+import { LoadMoreIndicator } from "@/components/feed/load-more-indicator";
 import { Header } from "@/layout/header";
 import { Sidebar } from "@/layout/sidebar";
 import { useBookmarks } from "@/hooks/use-bookmarks";
@@ -14,6 +15,8 @@ import {
   getArticles,
   getArticlesByCategory,
   getCategories,
+  searchArticles,
+  type ArticlePage,
 } from "@/services/article-service";
 import type { Article, Category } from "@/types/news";
 
@@ -27,17 +30,20 @@ export function NewsFeedLayout() {
   const [categories, setCategories] = useState<Category[]>(fallbackCategories);
   const [articles, setArticles] = useState<Article[]>([]);
   const [loadedCategory, setLoadedCategory] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [retryKey, setRetryKey] = useState(0);
   const [activeAudioId, setActiveAudioId] = useState<string | null>(null);
   const { bookmarks, toggleBookmark } = useBookmarks();
+  const skipRef = useRef(0);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const categoryId = searchParams.get("category") ?? "all";
+  const searchQuery = searchParams.get("q") ?? "";
   const category = categoryId === "all" ? "All" : capitalize(categoryId);
-  const isAll = category === "All";
+  const isSearch = searchQuery.trim().length > 0;
   const isLoading = loadedCategory !== category;
-
-  console.log({ categoryId, category, isAll });
 
   const handleSelectCategory = (name: string) => {
     const id = name.toLowerCase();
@@ -72,14 +78,24 @@ export function NewsFeedLayout() {
   useEffect(() => {
     let cancelled = false;
     const cat = category;
-    const request =
-      cat === "All" ? getArticles() : getArticlesByCategory(cat.toLowerCase());
+
+    let request: Promise<ArticlePage>;
+    if (isSearch) {
+      request = searchArticles(searchQuery);
+    } else if (cat === "All") {
+      request = getArticles();
+    } else {
+      request = getArticlesByCategory(cat.toLowerCase());
+    }
 
     request
-      .then((fetched) => {
+      .then((page) => {
         if (!cancelled) {
-          setArticles(fetched);
+          setArticles(page.articles);
+          setHasMore(page.hasMore);
           setLoadedCategory(cat);
+          skipRef.current = page.articles.length;
+          setIsLoadingMore(false);
         }
       })
       .catch((requestError: unknown) => {
@@ -96,7 +112,54 @@ export function NewsFeedLayout() {
     return () => {
       cancelled = true;
     };
-  }, [category, retryKey]);
+  }, [category, isSearch, searchQuery, retryKey]);
+
+  const loadMore = useCallback(async () => {
+    if (isLoadingMore || !hasMore || isLoading || isSearch) return;
+
+    setIsLoadingMore(true);
+    const skip = skipRef.current;
+    try {
+      let request: Promise<ArticlePage>;
+      if (category === "All") {
+        request = getArticles({ skip });
+      } else {
+        request = getArticlesByCategory(category.toLowerCase(), { skip });
+      }
+      const page = await request;
+      setArticles((prev) => [
+        ...prev,
+        ...page.articles.filter(
+          (a) => !prev.some((existing) => existing.id === a.id),
+        ),
+      ]);
+      skipRef.current = skip + page.articles.length;
+      setHasMore(page.hasMore);
+    } catch {
+      setHasMore(false);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [category, hasMore, isLoading, isLoadingMore, isSearch]);
+
+  const handleSentinelRef = useCallback((node: HTMLDivElement | null) => {
+    sentinelRef.current = node;
+  }, []);
+
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          void loadMore();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [loadMore, hasMore, isLoadingMore, isLoading]);
 
   const handleRetry = () => {
     setError(null);
@@ -107,13 +170,25 @@ export function NewsFeedLayout() {
   return (
     <main className="news-page">
       <Header />
-      <CategoryTabs
-        categories={categories}
-        selected={category}
-        onSelect={handleSelectCategory}
-      />
+      {!isSearch && (
+        <CategoryTabs
+          categories={categories}
+          selected={category}
+          onSelect={handleSelectCategory}
+        />
+      )}
       <div className="content-shell">
         <section className="main-feed">
+          {isSearch && (
+            <div className="search-results-heading">
+              <h1>Search results</h1>
+              <p>
+                {articles.length > 0
+                  ? `${articles.length} result${articles.length === 1 ? "" : "s"} for "${searchQuery}"`
+                  : `No results for "${searchQuery}"`}
+              </p>
+            </div>
+          )}
           {isLoading ? (
             <LoadingSkeleton />
           ) : error ? (
@@ -126,14 +201,25 @@ export function NewsFeedLayout() {
                 onBookmark={toggleBookmark}
                 activeAudioId={activeAudioId}
                 onAudioActivate={setActiveAudioId}
-                showCategory={isAll}
+                showCategory={true}
               />
+              <div ref={isSearch ? undefined : handleSentinelRef} />
+              {!isSearch && hasMore && (
+                <LoadMoreIndicator loading={isLoadingMore} />
+              )}
+              {!isSearch && !hasMore && (
+                <p className="feed-end">You&apos;re all caught up.</p>
+              )}
             </>
           ) : (
             <div className="empty-state">
               <span>☼</span>
               <h2>No news available.</h2>
-              <p>Try another category to discover more stories.</p>
+              <p>
+                {isSearch
+                  ? `Nothing found for "${searchQuery}". Try different keywords.`
+                  : "Try another category to discover more stories."}
+              </p>
             </div>
           )}
         </section>

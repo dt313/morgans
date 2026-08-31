@@ -7,7 +7,9 @@ type IconName =
   | "audio"
   | "play"
   | "pause"
-  | "stop";
+  | "stop"
+  | "chat"
+  | "close";
 
 export function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
   const paths = {
@@ -48,6 +50,17 @@ export function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
       <path d="M6 3.5A1.5 1.5 0 0 1 7.5 2h9A1.5 1.5 0 0 1 18 3.5V22l-6-3.8L6 22V3.5Z" />
     ),
     chevron: <path d="m9 18 6-6-6-6" />,
+    chat: (
+      <>
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </>
+    ),
+    close: (
+      <>
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </>
+    ),
   };
 
   return (

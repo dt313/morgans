@@ -7,6 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 
 from src.db.base import Base
+from pgvector.sqlalchemy import Vector
 
 
 class ArticleStatus(str, Enum):
@@ -55,6 +56,11 @@ class Article(Base):
     )
 
     news_source = relationship("NewsSource", back_populates="articles")
+
+    embedding: Mapped[list[float] | None] = mapped_column(
+        Vector(1024),
+        nullable=True,
+    )
 
     @property
     def category(self) -> str | None:

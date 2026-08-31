@@ -7,6 +7,7 @@ from src.core.config import settings
 from src.core.logger import get_logger
 from src.services.article_service import article_service
 from src.services.crawl_service import crawl_service
+from src.services.article_embedding_service import article_embedding_service
 
 logger = get_logger(__name__)
 
@@ -19,8 +20,12 @@ async def run_pipeline():
         await crawl_service.rss_collect()
         logger.info("RSS crawl completed")
 
-        await article_service.update_summarize()
-        logger.info("Article summarize completed")
+        # await article_service.update_summarize()
+        # logger.info("Article summarize completed")
+
+        # await article_embedding_service.update_embeddings()
+        # logger.info("Article embedding completed")
+
     except Exception:
         logger.exception("Pipeline job failed")
     logger.info("Pipeline job finished")
