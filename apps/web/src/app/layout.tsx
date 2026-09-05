@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/hooks/use-language";
 import { ChatWidget } from "@/components/chat/chat-widget";
+import logo from "@/assets/imgs/logo.png";
 
 export const metadata: Metadata = {
-  title: "Briefly — Your daily news",
+  title: "Morgans — Your daily news",
   description: "A thoughtfully curated news feed.",
+  icons: {
+    icon: { url: logo.src, type: "image/png" },
+  },
 };
 
 export default function RootLayout({

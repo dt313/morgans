@@ -68,15 +68,15 @@ class ArticleEmbeddingService:
         topics = ", ".join(article.topics or [])
 
         return f"""
-Title:
-{article.korean_title}
+                Title:
+                {article.korean_title}
 
-Summary:
-{article.korean_summary}
+                Summary:
+                {article.korean_summary}
 
-Topics:
-{topics}
-""".strip()
+                Topics:
+                {topics}
+                """.strip()
 
 
 article_embedding_service = ArticleEmbeddingService()

@@ -24,6 +24,7 @@ async def chat(
     return await chat_service.chat(
         db=db,
         question=request.message,
+        session_id=request.session_id,
     )
 
 
@@ -33,7 +34,11 @@ async def chat_stream(
     db: AsyncSession = Depends(get_db),
 ):
     return StreamingResponse(
-        chat_service.chat_stream(db=db, question=request.message),
+        chat_service.chat_stream(
+            db=db,
+            question=request.message,
+            session_id=request.session_id,
+        ),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",

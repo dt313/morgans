@@ -58,7 +58,7 @@ export function ArticleCard({
           </a>
         </div>
       </div>
-      <BookmarkButton active={bookmarked} onClick={onBookmark} />
+      {/* <BookmarkButton active={bookmarked} onClick={onBookmark} /> */}
     </article>
   );
 }

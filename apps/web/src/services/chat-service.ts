@@ -16,13 +16,20 @@ export type StreamEvent =
   | { type: "token"; content: string }
   | { type: "sources"; sources: ChatSource[] };
 
-export async function sendMessage(message: string): Promise<ChatResponse> {
-  const response = await api.post<ChatResponse>("/chat", { message });
+export async function sendMessage(
+  message: string,
+  sessionId?: string,
+): Promise<ChatResponse> {
+  const response = await api.post<ChatResponse>("/chat", {
+    message,
+    session_id: sessionId,
+  });
   return response.data;
 }
 
 export async function* sendMessageStream(
   message: string,
+  sessionId?: string,
 ): AsyncGenerator<StreamEvent> {
   const base =
     process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1";
@@ -42,7 +49,7 @@ export async function* sendMessageStream(
   const res = await fetch(`${base}/chat/stream`, {
     method: "POST",
     headers,
-    body: JSON.stringify({ message }),
+    body: JSON.stringify({ message, session_id: sessionId }),
   });
 
   if (!res.ok) {

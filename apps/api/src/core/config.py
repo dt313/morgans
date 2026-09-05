@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    APP_NAME: str = "News API"
+    APP_NAME: str = "Morgans"
     APP_ENV: str = os.getenv("APP_ENV", "development")
     DEBUG: bool = True
 

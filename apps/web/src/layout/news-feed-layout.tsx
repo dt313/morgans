@@ -10,6 +10,7 @@ import { LoadingSkeleton } from "@/components/feed/loading-skeleton";
 import { LoadMoreIndicator } from "@/components/feed/load-more-indicator";
 import { Header } from "@/layout/header";
 import { Sidebar } from "@/layout/sidebar";
+import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { useBookmarks } from "@/hooks/use-bookmarks";
 import {
   getArticles,
@@ -115,13 +116,15 @@ export function NewsFeedLayout() {
   }, [category, isSearch, searchQuery, retryKey]);
 
   const loadMore = useCallback(async () => {
-    if (isLoadingMore || !hasMore || isLoading || isSearch) return;
+    if (isLoadingMore || !hasMore || isLoading) return;
 
     setIsLoadingMore(true);
     const skip = skipRef.current;
     try {
       let request: Promise<ArticlePage>;
-      if (category === "All") {
+      if (isSearch) {
+        request = searchArticles(searchQuery, { skip });
+      } else if (category === "All") {
         request = getArticles({ skip });
       } else {
         request = getArticlesByCategory(category.toLowerCase(), { skip });
@@ -140,7 +143,7 @@ export function NewsFeedLayout() {
     } finally {
       setIsLoadingMore(false);
     }
-  }, [category, hasMore, isLoading, isLoadingMore, isSearch]);
+  }, [category, hasMore, isLoading, isLoadingMore, isSearch, searchQuery]);
 
   const handleSentinelRef = useCallback((node: HTMLDivElement | null) => {
     sentinelRef.current = node;
@@ -181,6 +184,25 @@ export function NewsFeedLayout() {
         <section className="main-feed">
           {isSearch && (
             <div className="search-results-heading">
+              <button
+                onClick={() => router.replace("/feed", { scroll: false })}
+                className="search-back-btn"
+                aria-label="Back to feed"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+                Back to feed
+              </button>
               <h1>Search results</h1>
               <p>
                 {articles.length > 0
@@ -203,11 +225,9 @@ export function NewsFeedLayout() {
                 onAudioActivate={setActiveAudioId}
                 showCategory={true}
               />
-              <div ref={isSearch ? undefined : handleSentinelRef} />
-              {!isSearch && hasMore && (
-                <LoadMoreIndicator loading={isLoadingMore} />
-              )}
-              {!isSearch && !hasMore && (
+              <div ref={handleSentinelRef} />
+              {hasMore && <LoadMoreIndicator loading={isLoadingMore} />}
+              {!hasMore && (
                 <p className="feed-end">You&apos;re all caught up.</p>
               )}
             </>
@@ -225,6 +245,7 @@ export function NewsFeedLayout() {
         </section>
         <Sidebar />
       </div>
+      <ScrollToTop />
     </main>
   );
 }

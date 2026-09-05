@@ -28,7 +28,12 @@ class ArticleRepository:
         result = await db.execute(
             select(Article)
             .options(selectinload(Article.news_source))
-            .where(Article.status == ArticleStatus.PUBLISHED)
+            .where(
+                or_(
+                    Article.status == ArticleStatus.PUBLISHED,
+                    Article.status == ArticleStatus.PROCESSING,
+                )
+            )
             .order_by(desc(Article.published_at).nulls_last(), desc(Article.id))
             .offset(skip)
             .limit(limit)
@@ -127,7 +132,10 @@ class ArticleRepository:
             .options(selectinload(Article.news_source))
             .join(NewsSource, Article.source_id == NewsSource.id)
             .where(
-                Article.status == ArticleStatus.PUBLISHED,
+                or_(
+                    Article.status == ArticleStatus.PUBLISHED,
+                    Article.status == ArticleStatus.PROCESSING,
+                ),
                 NewsSource.category == category,
             )
             .order_by(desc(Article.published_at).nulls_last(), desc(Article.id))
@@ -196,7 +204,10 @@ class ArticleRepository:
             select(Article)
             .options(selectinload(Article.news_source))
             .where(
-                Article.status == ArticleStatus.PUBLISHED,
+                or_(
+                    Article.status == ArticleStatus.PUBLISHED,
+                    Article.status == ArticleStatus.PROCESSING,
+                ),
                 or_(
                     Article.korean_title.ilike(pattern),
                     Article.vietnamese_title.ilike(pattern),
@@ -217,18 +228,24 @@ class ArticleRepository:
         db: AsyncSession,
         embedding: list[float],
         limit: int = 5,
+        published_from: datetime | None = None,
+        published_to: datetime | None = None,
+        max_distance: float | None = 0.7,
     ):
         distance = Article.embedding.cosine_distance(embedding)
 
-        result = await db.execute(
-            select(Article)
-            .where(
-                Article.status == ArticleStatus.PUBLISHED,
-                Article.embedding.is_not(None),
-            )
-            .order_by(distance)
-            .limit(limit)
+        query = select(Article).where(
+            Article.status == ArticleStatus.PUBLISHED,
+            Article.embedding.is_not(None),
         )
+        if max_distance is not None:
+            query = query.where(distance < max_distance)
+        if published_from is not None:
+            query = query.where(Article.published_at >= published_from)
+        if published_to is not None:
+            query = query.where(Article.published_at < published_to)
+
+        result = await db.execute(query.order_by(distance).limit(limit))
 
         return list(result.scalars().all())
 

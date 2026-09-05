@@ -20,6 +20,16 @@ export function ChatWidget() {
   const [isExpanded, setIsExpanded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const sessionIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!sessionIdRef.current) {
+      sessionIdRef.current =
+        typeof crypto !== "undefined" && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    }
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -58,7 +68,10 @@ export function ChatWidget() {
     ]);
 
     try {
-      for await (const event of sendMessageStream(text)) {
+      for await (const event of sendMessageStream(
+        text,
+        sessionIdRef.current ?? undefined,
+      )) {
         if (event.type === "token" && event.content) {
           if (!hasStreamed) {
             hasStreamed = true;
@@ -141,7 +154,7 @@ export function ChatWidget() {
               </span>
               <div className="min-w-0">
                 <h3 className="m-0 truncate text-sm font-semibold text-[#242424]">
-                  News AI
+                  Morgans
                 </h3>
                 <p className="m-0 text-[11px] text-[#6b6b6b]">
                   Ask about any news
@@ -149,6 +162,31 @@ export function ChatWidget() {
               </div>
             </div>
             <div className="flex shrink-0 items-center gap-1">
+              <button
+                onClick={() => {
+                  setMessages([]);
+                  sessionIdRef.current =
+                    typeof crypto !== "undefined" && crypto.randomUUID
+                      ? crypto.randomUUID()
+                      : `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+                }}
+                className="grid size-7 place-items-center rounded-full border border-[#e6e6e6] bg-white text-[#3d3d3d] transition-colors hover:bg-[#f3f3f3]"
+                title="New chat"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M3 12a9 9 0 1 0 2.64-6.36" />
+                  <path d="M3 4v5h5" />
+                </svg>
+              </button>
               <button
                 onClick={() => setIsExpanded((v) => !v)}
                 className="hidden size-7 place-items-center rounded-full border border-[#e6e6e6] bg-white text-[#3d3d3d] transition-colors hover:bg-[#f3f3f3] sm:grid"

@@ -46,7 +46,7 @@ function toFeedArticle(article: ApiArticle): Article {
       "No summary available.",
     thumbnail: article.thumbnail_url ?? fallbackThumbnail,
     category: article.category ? capitalize(article.category) : "News",
-    publisher: article.publisher ?? article.author ?? "News AI",
+    publisher: article.publisher ?? article.author ?? "Morgans",
     publishedAt:
       date && !Number.isNaN(date.getTime())
         ? new Intl.DateTimeFormat("en", {
