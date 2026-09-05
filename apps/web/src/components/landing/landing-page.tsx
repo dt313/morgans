@@ -228,7 +228,7 @@ function CountUp({ end, suffix = "" }: { end: number; suffix?: string }) {
   }, [end]);
 
   return (
-    <span ref={ref}>
+    <span ref={ref} className="landing-countup">
       {value}
       {suffix}
     </span>

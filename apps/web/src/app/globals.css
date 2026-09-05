@@ -102,7 +102,8 @@ button {
   position: sticky;
   top: 0;
   z-index: 20;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 92%, transparent);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-border) 92%, transparent);
   background: color-mix(in srgb, var(--background) 88%, transparent);
   backdrop-filter: blur(16px);
 }
@@ -642,7 +643,8 @@ button {
     padding: 12px 16px 14px;
     background: var(--background);
     border-bottom: 1px solid var(--color-border);
-    box-shadow: 0 4px 12px color-mix(in srgb, var(--color-black) 6%, transparent);
+    box-shadow: 0 4px 12px
+      color-mix(in srgb, var(--color-black) 6%, transparent);
   }
   .mobile-search-panel:not(.is-open) {
     display: none;
@@ -757,7 +759,12 @@ button {
 .skeleton-line,
 .skeleton-row {
   animation: shimmer 1.4s ease infinite;
-  background: linear-gradient(90deg, var(--color-skeleton) 25%, var(--color-skeleton-high) 50%, var(--color-skeleton) 75%);
+  background: linear-gradient(
+    90deg,
+    var(--color-skeleton) 25%,
+    var(--color-skeleton-high) 50%,
+    var(--color-skeleton) 75%
+  );
   background-size: 200% 100%;
   border-radius: 7px;
 }
@@ -1304,16 +1311,22 @@ html {
   border-radius: 99px;
   padding: 10px 20px;
   color: var(--background) !important;
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-emerald));
+  background: linear-gradient(
+    135deg,
+    var(--color-accent),
+    var(--color-accent-emerald)
+  );
   font-weight: 600;
-  box-shadow: 0 4px 14px color-mix(in srgb, var(--color-accent) 28%, transparent);
+  box-shadow: 0 4px 14px
+    color-mix(in srgb, var(--color-accent) 28%, transparent);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
 }
 .landing-cta-link:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 22px color-mix(in srgb, var(--color-accent) 36%, transparent);
+  box-shadow: 0 8px 22px
+    color-mix(in srgb, var(--color-accent) 36%, transparent);
 }
 .landing-cta-link::after {
   content: "";
@@ -1372,8 +1385,15 @@ html {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(color-mix(in srgb, var(--color-accent) 5%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--color-accent) 5%, transparent) 1px, transparent 1px);
+    linear-gradient(
+      color-mix(in srgb, var(--color-accent) 5%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-accent) 5%, transparent) 1px,
+      transparent 1px
+    );
   background-size: 58px 58px;
   mask-image: radial-gradient(
     ellipse 90% 68% at 50% 0%,
@@ -1479,7 +1499,12 @@ html {
   letter-spacing: -2.6px;
 }
 .landing-title-accent {
-  background: linear-gradient(100deg, var(--color-accent) 10%, var(--color-accent-emerald-dark) 55%, var(--color-accent-mint) 92%);
+  background: linear-gradient(
+    100deg,
+    var(--color-accent) 10%,
+    var(--color-accent-emerald-dark) 55%,
+    var(--color-accent-mint) 92%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1511,13 +1536,19 @@ html {
   transition: all 0.22s ease;
 }
 .landing-btn-primary {
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-emerald));
+  background: linear-gradient(
+    135deg,
+    var(--color-accent),
+    var(--color-accent-emerald)
+  );
   color: var(--background);
-  box-shadow: 0 6px 20px color-mix(in srgb, var(--color-accent) 32%, transparent);
+  box-shadow: 0 6px 20px
+    color-mix(in srgb, var(--color-accent) 32%, transparent);
 }
 .landing-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px color-mix(in srgb, var(--color-accent) 40%, transparent);
+  box-shadow: 0 12px 30px
+    color-mix(in srgb, var(--color-accent) 40%, transparent);
 }
 .landing-btn-ghost {
   border: 1px solid var(--color-border-muted);
@@ -1633,7 +1664,7 @@ html {
   display: block;
   margin-bottom: 4px;
   font-family: Georgia, serif;
-  font-size: clamp(28px, 3.4vw, 38px);
+  font-size: clamp(44px, 4.8vw, 64px);
   letter-spacing: -1.4px;
   font-variant-numeric: tabular-nums;
 }
@@ -1645,6 +1676,12 @@ html {
   color: var(--color-text-secondary);
   font-size: 13px;
   line-height: 1.35;
+}
+
+.landing-stat .landing-countup {
+  font-family: Georgia, serif;
+  font-size: 24px;
+  margin-right: 4px;
 }
 
 /* Reveal-on-scroll */
@@ -1703,6 +1740,9 @@ html {
 }
 .landing-feature {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   overflow: hidden;
   border: 1px solid var(--color-border);
   border-radius: 18px;
@@ -1740,9 +1780,14 @@ html {
   height: 54px;
   place-items: center;
   border-radius: 14px;
-  background: linear-gradient(135deg, var(--color-accent-tint), var(--color-accent-tint-glow));
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-tint),
+    var(--color-accent-tint-glow)
+  );
   color: var(--color-accent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 12%, transparent);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--color-accent) 12%, transparent);
   transition: transform 0.25s ease;
 }
 .landing-feature:hover .landing-feature-icon {
@@ -1756,6 +1801,7 @@ html {
 }
 .landing-feature p {
   margin: 0;
+  margin-top: auto;
   color: var(--color-text-secondary);
   font-family: Georgia, serif;
   font-size: 15px;
@@ -1804,7 +1850,8 @@ html {
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.04em;
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--color-accent) 12%, transparent);
+  box-shadow: 0 6px 18px
+    color-mix(in srgb, var(--color-accent) 12%, transparent);
   transition:
     transform 0.25s ease,
     background 0.25s ease;
@@ -1876,9 +1923,14 @@ html {
       color-mix(in srgb, var(--background) 14%, transparent),
       transparent 60%
     ),
-    linear-gradient(135deg, var(--color-accent-dark), var(--color-accent-emerald));
+    linear-gradient(
+      135deg,
+      var(--color-accent-dark),
+      var(--color-accent-emerald)
+    );
   color: var(--background);
-  box-shadow: 0 32px 80px color-mix(in srgb, var(--color-accent-emerald) 28%, transparent);
+  box-shadow: 0 32px 80px
+    color-mix(in srgb, var(--color-accent-emerald) 28%, transparent);
 }
 .landing-cta-card::before,
 .landing-cta-card::after {
@@ -1927,11 +1979,13 @@ html {
   position: relative;
   background: var(--background);
   color: var(--color-accent-dark);
-  box-shadow: 0 10px 26px color-mix(in srgb, var(--color-black) 18%, transparent);
+  box-shadow: 0 10px 26px
+    color-mix(in srgb, var(--color-black) 18%, transparent);
 }
 .landing-btn-light:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 34px color-mix(in srgb, var(--color-black) 24%, transparent);
+  box-shadow: 0 16px 34px
+    color-mix(in srgb, var(--color-black) 24%, transparent);
 }
 
 /* Footer */
