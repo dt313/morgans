@@ -2,14 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/hooks/use-language";
 import { ChatWidget } from "@/components/chat/chat-widget";
-import img from "@/assets/imgs/img.png";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://morgans.cc.cd",
+  ),
   title: "Morgans — Your daily news",
   description: "A thoughtfully curated news feed.",
-  icons: {
-    icon: { url: img.src, type: "image/png" },
-  },
 };
 
 export default function RootLayout({
