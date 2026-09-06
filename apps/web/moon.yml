@@ -20,6 +20,8 @@ tasks:
     command: pnpm start
     options:
       envFile: .env.prod
+    deps:
+      - build
 
   lint:
     command: pnpm lint
