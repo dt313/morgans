@@ -5,7 +5,7 @@ import { ChatWidget } from "@/components/chat/chat-widget";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://morgans.cc.cd",
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://news.morgans.cc.cd",
   ),
   title: "Morgans — Your daily news",
   description: "A thoughtfully curated news feed.",
