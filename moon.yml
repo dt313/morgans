@@ -5,6 +5,7 @@ tasks:
     deps:
       - api:dev
       - web:dev
+      - news-pipeline:dev
 
     options:
       runInCI: false
