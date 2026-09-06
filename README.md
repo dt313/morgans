@@ -16,13 +16,20 @@
 
 ## 🚀 Features
 
-✅ Korean news feed — fetched from 15+ trusted Korean sources
+✅ Korean news feed 
+
 ✅ Summarized & translated into Vietnamese by AI
+
 ✅ RAG-powered news chat — ask anything about the articles, with conversation memory
+
 ✅ Daily audio briefing — generated with ElevenLabs TTS
+
 ✅ Fully automated pipeline — crawl → extract → summarize → embed → publish
+
 ✅ Time-aware retrieval ("today" / "yesterday" filtering)
+
 ✅ Multilingual support (Korean ↔ Vietnamese)
+
 ✅ Responsive, Medium-inspired UI
 
 ---
