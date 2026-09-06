@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/hooks/use-language";
 import { ChatWidget } from "@/components/chat/chat-widget";
-import logo from "@/assets/imgs/logo.png";
+import img from "@/assets/imgs/img.png";
 
 export const metadata: Metadata = {
   title: "Morgans — Your daily news",
   description: "A thoughtfully curated news feed.",
   icons: {
-    icon: { url: logo.src, type: "image/png" },
+    icon: { url: img.src, type: "image/png" },
   },
 };
 

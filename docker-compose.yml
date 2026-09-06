@@ -1,0 +1,85 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: news_dev
+    ports:
+      - "5555:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: ./apps/api
+    environment:
+      APP_NAME: "Morgans"
+      APP_ENV: "prod"
+      DEBUG: "false"
+      DATABASE_URL: postgresql+asyncpg://postgres:123456@postgres:5432/news_dev
+      ACCESS_SECRET_KEY: ${ACCESS_SECRET_KEY:-change-me}
+      REFRESH_SECRET_KEY: ${REFRESH_SECRET_KEY:-change-me}
+      LLM_PROVIDER: ${LLM_PROVIDER:-deepseek}
+      LLM_MODEL: ${LLM_MODEL:-deepseek-v4-flash}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-bge-m3}
+      ELEVENLABS_API_KEY: ${ELEVENLABS_API_KEY:-}
+      KOREAN_VOICE_ID: ${KOREAN_VOICE_ID:-}
+      VIETNAMESE_VOICE_ID: ${VIETNAMESE_VOICE_ID:-}
+      AUDIO_CACHE_DIR: /app/static/audio
+    ports:
+      - "8000:8000"
+    volumes:
+      - audio-cache:/app/static/audio
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  news-pipeline:
+    build: ./apps/news-pipeline
+    environment:
+      APP_ENV: "prod"
+      DATABASE_URL: postgresql+asyncpg://postgres:123456@postgres:5432/news_dev
+      LLM_PROVIDER: ${LLM_PROVIDER:-deepseek}
+      LLM_MODEL: ${LLM_MODEL:-deepseek-v4-flash}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-bge-m3}
+      PIPELINE_ENABLED: "true"
+      PIPELINE_RUN_ON_START: "true"
+      PIPELINE_INTERVAL_MINUTES: 30
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ./apps/web
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000/api/v1}
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000/api/v1}
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  audio-cache:

@@ -8,9 +8,18 @@ tasks:
 
   dev:
     command: pnpm dev
+    options:
+      envFile: .env.dev
 
   build:
     command: pnpm build
+    options:
+      envFile: .env.prod
+
+  start:
+    command: pnpm start
+    options:
+      envFile: .env.prod
 
   lint:
     command: pnpm lint
