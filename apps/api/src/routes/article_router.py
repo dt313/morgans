@@ -39,7 +39,8 @@ async def get_trending_topics(
     )
 
 
-@router.get("/", response_model=SuccessResponseModel[list[ArticleResponse]])
+@router.get("", response_model=SuccessResponseModel[list[ArticleResponse]])
+@router.get("/", response_model=SuccessResponseModel[list[ArticleResponse]], include_in_schema=False)
 async def get_articles(
     db: AsyncSession = Depends(get_db),
     skip: int = Query(default=0, ge=0),

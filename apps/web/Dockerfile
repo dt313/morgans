@@ -10,7 +10,7 @@ COPY src ./src
 COPY public ./public
 COPY next.config.ts tsconfig.json postcss.config.mjs eslint.config.mjs ./
 
-ARG NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+ARG NEXT_PUBLIC_API_URL=https://api.morgans.cc.cd/api/v1
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
 RUN pnpm build
